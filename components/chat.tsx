@@ -1,12 +1,13 @@
 "use client"
 
 import crypto from "crypto"
-import { useMemo, useState } from "react"
+import { useEffect, useMemo, useState } from "react"
 import type { Message as MessageType } from "@/types"
 import { SendIcon } from "lucide-react"
 
 import { cn } from "@/lib/utils"
 
+import { sendMessage } from "./_actions/chat"
 import Avatar from "./avatar"
 import { Button } from "./ui/button"
 import { Input } from "./ui/input"
@@ -18,6 +19,20 @@ export default function Chat() {
 
   const [input, setInput] = useState<string>("")
   const inputLength = input.trim().length
+
+  useEffect(() => {
+    const eventSource = new EventSource(`/api/chat`)
+
+    eventSource.onmessage = (event) => {
+      const message = JSON.parse(event.data)
+
+      setMessages((prev) => [message, ...prev])
+    }
+
+    return () => {
+      eventSource.close()
+    }
+  }, [])
 
   return (
     <>
@@ -33,13 +48,10 @@ export default function Chat() {
           onSubmit={(event) => {
             event.preventDefault()
             if (inputLength === 0) return
-            setMessages([
-              {
-                name: name,
-                content: input,
-              },
-              ...messages,
-            ])
+            sendMessage({
+              name: name,
+              content: input,
+            })
             setInput("")
           }}
           className="flex w-full items-center space-x-2"
@@ -68,8 +80,8 @@ const Message = ({ name, content, me }: MessageType & { me: boolean }) => {
       <Avatar size={32} name={name} />
       <div
         className={cn(
-          "w-fit break-all rounded-lg px-3 py-1 shadow-sm",
-          me ? "bg-primary" : "border"
+          "w-fit break-all rounded-lg border px-3 py-1 shadow-sm",
+          me && "border-primary bg-primary"
         )}
       >
         {content}

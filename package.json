@@ -18,6 +18,7 @@
     "boring-avatars": "^1.10.1",
     "class-variance-authority": "^0.4.0",
     "clsx": "^1.2.1",
+    "eventemitter2": "^6.4.9",
     "lucide-react": "0.105.0-alpha.4",
     "next": "^13.4.8",
     "next-themes": "^0.2.1",
@@ -25,7 +26,8 @@
     "react-dom": "^18.2.0",
     "sharp": "^0.33.1",
     "tailwind-merge": "^1.13.2",
-    "tailwindcss-animate": "^1.0.6"
+    "tailwindcss-animate": "^1.0.6",
+    "zod": "^3.22.4"
   },
   "devDependencies": {
     "@ianvs/prettier-plugin-sort-imports": "^3.7.2",
